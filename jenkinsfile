@@ -5,12 +5,19 @@ pipeline{
 
     stages{
 
-       stage("build image"){
+       stage("build & push image"){
         steps{
             script{
                 withDockerRegistry(credentialsId: 'docker_ID') {
-                    
-            sh "docker build -t jesusgeo/static_app:${BUILD_ID}.0.0 ."
+                    try {
+                        sh "docker pull jesusgeo/static_app:122.0.0 ."
+                    }
+                    catch (exception) {
+                        echo "ssjhsjhsdhsjdsdjdhjdhs"
+                    }
+                // sh "docker build -t jesusgeo/static_app:${BUILD_ID}.0.0 ."
+                // sh "docker push jesusgeo/static_app:${BUILD_ID}.0.0"
+                // sh "docker rmi jesusgeo/static_app:${BUILD_ID}.0.0"
             // sh "docker tag static_app:latest jesusgeo/static_app:latest"
             
             
@@ -20,12 +27,12 @@ pipeline{
         }
        }
 
-       stage("push image"){
-        steps{
-            sh "docker push jesusgeo/static_app:${BUILD_ID}.0.0"
-            sh "docker rmi jesusgeo/static_app:${BUILD_ID}.0.0"
-        }
-       }
+    //    stage("deploy to ecr"){
+    //     steps{
+    //         sh "docker push jesusgeo/static_app:${BUILD_ID}.0.0"
+    //         sh "docker rmi jesusgeo/static_app:${BUILD_ID}.0.0"
+    //     }
+    //    }
     }
    
 }
