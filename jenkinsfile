@@ -1,43 +1,12 @@
-
 pipeline{
     agent any
-    parameters{
-       string(name: 'VERSION' , defaultValue: '1.0.0' , description: 'image version')
-    }
-
     stages{
-
-       stage("build & push image"){
-        steps{
-            script{
-                withDockerRegistry(credentialsId: 'docker_ID') {
-                    try {
-                        sh "docker pull jesusgeo/static_app:${params.VERSION}"
-                        echo "Image pulling"
-                    }
-                    catch (exception) {
-                        sh "docker build -t jesusgeo/static_app:${params.VERSION} ."
-                        sh "docker push jesusgeo/static_app:${params.VERSION}"
-                        sh "docker rmi jesusgeo/static_app:${params.VERSION}"
-                    }
-                // sh "docker build -t jesusgeo/static_app:${BUILD_ID}.0.0 ."
-                // sh "docker push jesusgeo/static_app:${BUILD_ID}.0.0"
-                // sh "docker rmi jesusgeo/static_app:${BUILD_ID}.0.0"
-            // sh "docker tag static_app:latest jesusgeo/static_app:latest"
-            
-            
-                }
+        stage("Build & push"){
+            steps{
+                sh "docker build -t app:1.0.0 ."
             }
-        
+           
         }
-       }
-
-    //    stage("deploy to ecr"){
-    //     steps{
-    //         sh "docker push jesusgeo/static_app:${BUILD_ID}.0.0"
-    //         sh "docker rmi jesusgeo/static_app:${BUILD_ID}.0.0"
-    //     }
-    //    }
     }
-   
+    
 }
