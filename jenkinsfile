@@ -1,7 +1,9 @@
 
 pipeline{
     agent any
-
+    parameters{
+       string(name: 'VERSION' , defaultValue: '1.0.0' , description: 'image version')
+    }
 
     stages{
 
@@ -10,10 +12,13 @@ pipeline{
             script{
                 withDockerRegistry(credentialsId: 'docker_ID') {
                     try {
-                        sh "docker pull jesusgeo/static_app:122.0.0 ."
+                        sh "docker pull jesusgeo/static_app:${params.VERSION}"
+                        echo "Image pulling"
                     }
                     catch (exception) {
-                        echo "ssjhsjhsdhsjdsdjdhjdhs"
+                        sh "docker build -t jesusgeo/static_app:${params.VERSION} ."
+                        sh "docker push jesusgeo/static_app:${params.VERSION}"
+                        sh "docker rmi jesusgeo/static_app:${params.VERSION}"
                     }
                 // sh "docker build -t jesusgeo/static_app:${BUILD_ID}.0.0 ."
                 // sh "docker push jesusgeo/static_app:${BUILD_ID}.0.0"
