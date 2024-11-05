@@ -12,11 +12,18 @@ pipeline{
                     
             sh "docker build -t jesusgeo/static_app:${BUILD_ID}.0.0 ."
             // sh "docker tag static_app:latest jesusgeo/static_app:latest"
-            sh "docker push jesusgeo/static_app:${BUILD_ID}.0.0"
-            sh "docker rmi static_app:${BUILD_ID}.0.0"
+            
+            
                 }
             }
         
+        }
+       }
+
+       stage("push image"){
+        steps{
+            sh "docker push jesusgeo/static_app:${BUILD_ID}.0.0"
+            sh "docker rmi jesusgeo/static_app:${BUILD_ID}.0.0"
         }
        }
     }
