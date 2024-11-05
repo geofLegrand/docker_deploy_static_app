@@ -5,13 +5,11 @@ pipeline{
 
     stages{
 
-        stage("trying"){
-
-            steps{
-                echo "========executing A========"
-            }
-           
+       stage("build image"){
+        steps{
+            sh "docker build -t app:latest ."
         }
+       }
     }
    
 }
