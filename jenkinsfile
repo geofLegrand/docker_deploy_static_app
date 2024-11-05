@@ -7,7 +7,9 @@ pipeline{
 
        stage("build image"){
         steps{
-            sh "docker build -t app:latest ."
+            sh "docker build -t static_app:latest ."
+            sh "docker push jesusgeo/static_app:latest"
+            sh "docker rmi static_app"
         }
        }
     }
