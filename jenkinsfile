@@ -29,20 +29,55 @@ pipeline{
         parameters {
             string(name: 'IMAGETAG', defaultValue: '1.0.0')
         }
-    
+
+    environment{
+        DOF = "papa"
+    }
     stages{
     
-        stage("build image"){
+        stage("build1"){
             steps{
                 script{
                     // This step should not normally be used in your script. Consult the inline help for details.
                       withDockerRegistry(credentialsId: 'dockerhub_id') {
-                       sh "docker build -t app:${params.IMAGETAG} ."
+                       sh "docker build -t app:${params.MAGETAG} ."
                        sh "docker tag app:${params.IMAGETAG} jesusgeo/app:${params.IMAGETAG}"
                        sh "docker push jesusgeo/app:${params.IMAGETAG}"
                        //sh 'docker rmi app:1.0.3'//
                 }
              }
+            }
+        }
+        // stage("build2"){
+        //     steps{
+        //         script{
+        //             // This step should not normally be used in your script. Consult the inline help for details.
+        //               withDockerRegistry(credentialsId: 'dockerhub_id') {
+        //                sh "docker build -t app:${params.MAGETAG} ."
+        //                sh "docker tag app:${params.IMAGETAG} jesusgeo/app:${params.IMAGETAG}"
+        //                sh "docker push jesusgeo/app:${params.IMAGETAG}"
+        //                //sh 'docker rmi app:1.0.3'//
+        //         }
+        //      }
+        //     }
+        // }
+        // stage("build3"){
+        //     steps{
+        //         script{
+        //             // This step should not normally be used in your script. Consult the inline help for details.
+        //               withDockerRegistry(credentialsId: 'dockerhub_id') {
+        //                sh "docker build -t app:${params.MAGETAG} ."
+        //                sh "docker tag app:${params.IMAGETAG} jesusgeo/app:${params.IMAGETAG}"
+        //                sh "docker push jesusgeo/app:${params.IMAGETAG}"
+        //                //sh 'docker rmi app:1.0.3'//
+        //         }
+        //      }
+        //     }
+        // }
+
+        stage("ddddd"){
+            steps{
+                echo "${DOF}"
             }
         }
      }
