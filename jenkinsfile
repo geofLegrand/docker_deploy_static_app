@@ -2,6 +2,7 @@ pipeline{
     agent any
         parameters {
             string(name: 'IMAGETAG', defaultValue: '1.0.6') // multiple assignments
+            
         }
 
     stages{
@@ -18,7 +19,6 @@ pipeline{
                             sh "docker tag myapp:${params.IMAGETAG} jesusgeo/myapp:${params.IMAGETAG}"
 
                             sh "docker push jesusgeo/myapp:${params.IMAGETAG}"
-
                         }
                 }
                 
