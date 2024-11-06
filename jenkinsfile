@@ -26,13 +26,14 @@
 
 pipeline{
     agent any
+    // dynamic variable
         parameters {
-            string(name: 'IMAGETAG', defaultValue: '1.0.0')
+            string(name: 'IMAGETAG', defaultValue: '1.0.0') // multiple assignments
         }
-
+  // static variable
     environment{
         // hardcode
-        KEITA = "papa see"
+        KEITA = "papa see" // 1 assignment
     }
     stages{
     
