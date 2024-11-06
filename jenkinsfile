@@ -28,7 +28,7 @@ pipeline{
     agent any
     // dynamic variable
         parameters {
-            string(name: 'IMAGETAG', defaultValue: '1.0.0') // multiple assignments
+            string(name: 'IMAGETAG', defaultValue: '1.0.52') // multiple assignments
         }
   // static variable
     environment{
