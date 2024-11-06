@@ -1,24 +1,49 @@
+// pipeline{
+//     agent any
+//     stages{
+
+//         // stage("Fetch code"){
+
+//         // }
+//         stage("Build & push"){
+//             steps{
+//                 script{
+//                     // This step should not normally be used in your script. Consult the inline help for details.
+//                         withDockerRegistry(credentialsId: 'dockerhub_id') {
+//                             sh "docker build -t myapp:1.0.0 ."
+//                             sh "docker tag myapp:1.0.0 jesusgeo/myapp:1.0.0"
+//                             sh "docker push jesusgeo/myapp:1.0.0"
+//                         }
+//                 }
+                
+//             }
+           
+//         }
+//     }
+    
+// }
+
+
 pipeline{
     agent any
+        parameters {
+            string(name: 'IMAGETAG', defaultValue: '1.0.0')
+        }
+    
     stages{
-
-        // stage("Fetch code"){
-
-        // }
-        stage("Build & push"){
+    
+        stage("build image"){
             steps{
                 script{
                     // This step should not normally be used in your script. Consult the inline help for details.
-                        withDockerRegistry(credentialsId: 'dockerhub_id') {
-                            sh "docker build -t myapp:1.0.0 ."
-                            sh "docker tag myapp:1.0.0 jesusgeo/myapp:1.0.0"
-                            sh "docker push jesusgeo/myapp:1.0.0"
-                        }
+                      withDockerRegistry(credentialsId: 'dockerhub_id') {
+                       sh 'docker build -t app:${params.IMAGETAG} .'
+                       sh 'docker tag app:${params.IMAGETAG} jesusgeo/app:${params.IMAGETAG}'
+                       sh 'docker push jesusgeo/app:${params.IMAGETAG}'
+                       //sh 'docker rmi app:1.0.3'//
                 }
-                
+             }
             }
-           
         }
-    }
-    
+     }
 }
