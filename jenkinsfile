@@ -44,11 +44,15 @@ pipeline{
         }
         stage("Deploy to ECS"){
             steps{
-                withAWS(credentials: 'ecr:us-east-1:awscreds', region: 'us-east-1') {
-                    // some block
-                    echo "====++++executing Deploy to ECS++++===="
-                    sh "aws ecs update-service --cluster Devopscluster --service  static-appService     --force-new-deployment"
-                }
+                    withDockerRegistry(credentialsId: 'ecr:us-east-1:awscreds') {
+                       sh "aws ecs update-service --cluster Devopscluster --service  static-appService --force-new-deployment"
+                         
+                    }
+                // withAWS(credentials: 'ecr:us-east-1:awscreds', region: 'us-east-1') {
+                //     // some block
+                //     echo "====++++executing Deploy to ECS++++===="
+                //     sh "aws ecs update-service --cluster Devopscluster --service  static-appService --force-new-deployment"
+                // }
             }
         }
 
