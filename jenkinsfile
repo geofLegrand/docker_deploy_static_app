@@ -9,20 +9,20 @@ pipeline{
         // stage("Fetch code"){
 
         // }
-        stage("Build & push dockerhub"){
-            steps{
-                script{
-                    // This step should not normally be used in your script. Consult the inline help for details.
-                        withDockerRegistry(credentialsId: 'dockerhub_id') {
-                            sh "docker build -t myapp:${params.IMAGETAG} ."
-                            sh "docker tag myapp:${params.IMAGETAG} jesusgeo/myapp:${params.IMAGETAG}"
-                            sh "docker push jesusgeo/myapp:${params.IMAGETAG}"
-                        }
-                }
+        // stage("Build & push dockerhub"){
+        //     steps{
+        //         script{
+        //             // This step should not normally be used in your script. Consult the inline help for details.
+        //                 withDockerRegistry(credentialsId: 'dockerhub_id') {
+        //                     sh "docker build -t myapp:${params.IMAGETAG} ."
+        //                     sh "docker tag myapp:${params.IMAGETAG} jesusgeo/myapp:${params.IMAGETAG}"
+        //                     sh "docker push jesusgeo/myapp:${params.IMAGETAG}"
+        //                 }
+        //         }
                 
-            }
+        //     }
            
-        }
+        // }
 
         stage("Build & push to ECR"){
             steps{
@@ -44,15 +44,18 @@ pipeline{
         }
         stage("Deploy to ECS"){
             steps{
-                    withDockerRegistry(credentialsId: 'ecr:us-east-1:awscreds') {
-                       sh "aws ecs update-service --cluster Devopscluster --service  static-appService --force-new-deployment"
+                    // withDockerRegistry(credentialsId: 'ecr:us-east-1:awscreds') {
+                    //    sh "aws ecs update-service --cluster Devopscluster --service  static-appService --force-new-deployment"
                          
+                    // }
+                    script{
+                            withAWS(credentials: 'ecr:us-east-1:awscreds', region: 'us-east-1') {
+                    // some block
+                    echo "====++++executing Deploy to ECS++++===="
+                    sh "aws ecs update-service --cluster Devopscluster --service  static-appService --force-new-deployment"
+                }
                     }
-                // withAWS(credentials: 'ecr:us-east-1:awscreds', region: 'us-east-1') {
-                //     // some block
-                //     echo "====++++executing Deploy to ECS++++===="
-                //     sh "aws ecs update-service --cluster Devopscluster --service  static-appService --force-new-deployment"
-                // }
+                
             }
         }
 
