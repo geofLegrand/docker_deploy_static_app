@@ -42,7 +42,7 @@ pipeline{
                 script{
                     // This step should not normally be used in your script. Consult the inline help for details.
                       withDockerRegistry(credentialsId: 'dockerhub_id') {
-                       sh "docker build -t app:${params.MAGETAG} ."
+                       sh "docker build -t app:${params.IMAGETAG} ."
                        sh "docker tag app:${params.IMAGETAG} jesusgeo/app:${params.IMAGETAG}"
                        sh "docker push jesusgeo/app:${params.IMAGETAG}"
                        //sh 'docker rmi app:1.0.3'//
