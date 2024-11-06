@@ -77,10 +77,10 @@ pipeline{
         //     }
         // }
 
-        // stage("ddddd"){
-        //     steps{
-        //         echo "${KEITA}"
-        //     }
-        // }
+        stage("ddddd"){
+            steps{
+                echo "${KEITA}"
+            }
+        }
      }
 }
