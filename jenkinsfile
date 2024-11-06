@@ -27,9 +27,9 @@ pipeline{
                 script{
                     
                     withDockerRegistry(credentialsId: 'ecr:us-east-1:awscreds', url: 'https://389035013580.dkr.ecr.us-east-1.amazonaws.com/') {
-                        // sh "docker build -t myapp:${params.IMAGETAG} ."
-                        // sh "docker tag myapp:${params.IMAGETAG} jesusgeo/myapp:${params.IMAGETAG}"
-                        // sh "docker push jesusgeo/myapp:${params.IMAGETAG}"
+                        sh "docker build -t myapp:${params.IMAGETAG} ."
+                        sh "docker tag myapp:${params.IMAGETAG} 389035013580.dkr.ecr.us-east-1.amazonaws.com/static_app:${params.IMAGETAG}"
+                        sh "docker push 389035013580.dkr.ecr.us-east-1.amazonaws.com/static_app:${params.IMAGETAG}"
                          echo "====++++executing Build & push to ECR++++===="
                     }
                     
