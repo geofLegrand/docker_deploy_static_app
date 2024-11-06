@@ -3,6 +3,7 @@ pipeline{
         parameters {
             string(name: 'IMAGETAG', defaultValue: '1.0.52') // multiple assignments
         }
+
     stages{
 
         // stage("Fetch code"){
@@ -22,6 +23,7 @@ pipeline{
             }
            
         }
+        
         stage("Build & push to ECR"){
             steps{
                 script{
@@ -31,7 +33,7 @@ pipeline{
                         sh "docker tag myapp:${params.IMAGETAG} 389035013580.dkr.ecr.us-east-1.amazonaws.com/static_app:${params.IMAGETAG}"
                         sh "docker push 389035013580.dkr.ecr.us-east-1.amazonaws.com/static_app:${params.IMAGETAG}"
                          echo "====++++executing Build & push to ECR++++===="
-                         sh "aws s3 ls"
+                         
                     }
                     
                 }
