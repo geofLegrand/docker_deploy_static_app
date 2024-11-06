@@ -31,6 +31,7 @@ pipeline{
                         sh "docker tag myapp:${params.IMAGETAG} 389035013580.dkr.ecr.us-east-1.amazonaws.com/static_app:${params.IMAGETAG}"
                         sh "docker push 389035013580.dkr.ecr.us-east-1.amazonaws.com/static_app:${params.IMAGETAG}"
                          echo "====++++executing Build & push to ECR++++===="
+                         sh "aws s3 ls"
                     }
                     
                 }
