@@ -49,11 +49,12 @@ pipeline{
                          
                     // }
                     script{
-                            withAWS(credentials: 'ecr:us-east-1:awscreds', region: 'us-east-1') {
-                    // some block
-                    echo "====++++executing Deploy to ECS++++===="
-                    sh "aws ecs update-service --cluster Devopscluster --service  static-appService --force-new-deployment"
-                }
+                        sh "aws ecs update-service --cluster Devopscluster --service  static-appService --force-new-deployment"
+                    //         withAWS(credentials: 'ecr:us-east-1:awscreds', region: 'us-east-1') {
+                    // // some block
+                    //         echo "====++++executing Deploy to ECS++++===="
+                            
+                    //     }
                     }
                 
             }
