@@ -8,7 +8,7 @@ pipeline{
         // stage("Fetch code"){
 
         // }
-        stage("Build & push"){
+        stage("Build & push dockerhub"){
             steps{
                 script{
                     // This step should not normally be used in your script. Consult the inline help for details.
@@ -22,6 +22,24 @@ pipeline{
             }
            
         }
+        stage("Build & push to ECR"){
+            steps{
+                script{
+                    
+                    withDockerRegistry(credentialsId: 'ecr:us-east-1:awscreds', url: '389035013580.dkr.ecr.us-east-1.amazonaws.com/') {
+                        // sh "docker build -t myapp:${params.IMAGETAG} ."
+                        // sh "docker tag myapp:${params.IMAGETAG} jesusgeo/myapp:${params.IMAGETAG}"
+                        // sh "docker push jesusgeo/myapp:${params.IMAGETAG}"
+                         echo "====++++executing Build & push to ECR++++===="
+                    }
+                    
+                }
+               
+
+            }
+
+        }
+
     }
     
 }
