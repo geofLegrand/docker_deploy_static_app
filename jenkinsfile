@@ -17,6 +17,7 @@ pipeline{
                             sh "docker build -t myapp:${params.IMAGETAG} ."
                             sh "docker tag myapp:${params.IMAGETAG} jesusgeo/myapp:${params.IMAGETAG}"
                             sh "docker push jesusgeo/myapp:${params.IMAGETAG}"
+                            
                         }
                 }
                 
