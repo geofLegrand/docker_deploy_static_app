@@ -1,7 +1,7 @@
 pipeline{
     agent any
         parameters {
-            string(name: 'IMAGETAG', defaultValue: '1.0.6') // multiple assignments
+            string(name: 'IMAGETAG', defaultValue: '1.0.0') // multiple assignments
 
         }
 
@@ -26,12 +26,21 @@ pipeline{
         }
 
         stage("Build & push to ECR"){
-            
+
             steps{
                 script{
                     // This step should not normally be used in your script. Consult the inline help for details.
                         withDockerRegistry(credentialsId: 'ecr:us-east-1:fasionapp_id', url: 'https://389035013580.dkr.ecr.us-east-1.amazonaws.com/') {
                             echo '"######################""""""   i am connected """""""###################'
+
+                             sh "docker build -t myapp:${params.IMAGETAG} ."
+
+                             sh "docker tag myapp:${params.IMAGETAG} 389035013580.dkr.ecr.us-east-1.amazonaws.com/fashionapp:${params.IMAGETAG}"
+
+                             sh "docker tag myapp:${params.IMAGETAG} 389035013580.dkr.ecr.us-east-1.amazonaws.com/fashionapp:latest"
+
+                             sh "docker push 389035013580.dkr.ecr.us-east-1.amazonaws.com/fashionapp:latest"
+
                         }
                 }
             }
