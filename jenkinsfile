@@ -4,43 +4,46 @@ pipeline{
             string(name: 'IMAGETAG', defaultValue: '1.0.0') // multiple assignments
 
         }
+        
+    environment{
+        CRED_ID = 'ecr:us-east-1:fasionapp_id'
+        REPO_NAME = 'fashionapp'
+        REPO_URL = "389035013580.dkr.ecr.us-east-1.amazonaws.com"
+        FULL_REPO_URL = 'https://${REPO_URL}/' 
+    }
 
     stages{
 
         // stage("Fetch code"){
 
         // }
-        stage("Build & push dockerhub"){
-            steps{
-                script{
-                    // This step should not normally be used in your script. Consult the inline help for details.
-                        withDockerRegistry(credentialsId: 'dockerhub_id') {
-                            sh "docker build -t myapp:${params.IMAGETAG} ."
-                            sh "docker tag myapp:${params.IMAGETAG} jesusgeo/myapp:${params.IMAGETAG}"
-                            sh "docker push jesusgeo/myapp:${params.IMAGETAG}"
-                        }
-                }
+        // stage("Build & push dockerhub"){
+        //     steps{
+        //         script{
+        //             // This step should not normally be used in your script. Consult the inline help for details.
+        //                 withDockerRegistry(credentialsId: 'dockerhub_id') {
+        //                     sh "docker build -t myapp:${params.IMAGETAG} ."
+        //                     sh "docker tag myapp:${params.IMAGETAG} jesusgeo/myapp:${params.IMAGETAG}"
+        //                     sh "docker push jesusgeo/myapp:${params.IMAGETAG}"
+        //                 }
+        //         }
                 
-            }
+        //     }
            
-        }
+        // }
 
         stage("Build & push to ECR"){
 
             steps{
                 script{
                     // This step should not normally be used in your script. Consult the inline help for details.
-                        withDockerRegistry(credentialsId: 'ecr:us-east-1:fasionapp_id', url: 'https://389035013580.dkr.ecr.us-east-1.amazonaws.com/') {
+                        withDockerRegistry(credentialsId: CRED_ID , url: FULL_REPO_URL ) {
                        
                              sh "docker build -t myapp:${params.IMAGETAG} ."
-
-                             sh "docker tag myapp:${params.IMAGETAG} 389035013580.dkr.ecr.us-east-1.amazonaws.com/fashionapp:${params.IMAGETAG}"
-
-                             sh "docker tag myapp:${params.IMAGETAG} 389035013580.dkr.ecr.us-east-1.amazonaws.com/fashionapp:latest"
-
-                             sh "docker push 389035013580.dkr.ecr.us-east-1.amazonaws.com/fashionapp:latest"
-
-                             sh "docker push 389035013580.dkr.ecr.us-east-1.amazonaws.com/fashionapp:${params.IMAGETAG}"
+                             sh "docker tag myapp:${params.IMAGETAG}  ${REPO_URL}/${REPO_NAME}:${params.IMAGETAG}"
+                             sh "docker tag myapp:${params.IMAGETAG} ${REPO_URL}/${REPO_NAME}:latest"
+                             sh "docker push ${REPO_URL}/${REPO_NAME}:latest"
+                             sh "docker push ${REPO_URL}/${REPO_NAME}:${params.IMAGETAG}"
 
                         }
                 }
