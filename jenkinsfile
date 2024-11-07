@@ -4,11 +4,12 @@ pipeline{
             string(name: 'IMAGETAG', defaultValue: '1.0.0') // multiple assignments
 
         }
-        
+
     environment{
         CRED_ID = 'ecr:us-east-1:fasionapp_id'
         REPO_NAME = 'fashionapp'
         REPO_URL = "389035013580.dkr.ecr.us-east-1.amazonaws.com"
+        
         FULL_REPO_URL = 'https://${REPO_URL}/' 
     }
 
