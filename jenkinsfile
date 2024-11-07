@@ -31,8 +31,7 @@ pipeline{
                 script{
                     // This step should not normally be used in your script. Consult the inline help for details.
                         withDockerRegistry(credentialsId: 'ecr:us-east-1:fasionapp_id', url: 'https://389035013580.dkr.ecr.us-east-1.amazonaws.com/') {
-                            echo '"######################""""""   i am connected """""""###################'
-
+                       
                              sh "docker build -t myapp:${params.IMAGETAG} ."
 
                              sh "docker tag myapp:${params.IMAGETAG} 389035013580.dkr.ecr.us-east-1.amazonaws.com/fashionapp:${params.IMAGETAG}"
@@ -40,6 +39,8 @@ pipeline{
                              sh "docker tag myapp:${params.IMAGETAG} 389035013580.dkr.ecr.us-east-1.amazonaws.com/fashionapp:latest"
 
                              sh "docker push 389035013580.dkr.ecr.us-east-1.amazonaws.com/fashionapp:latest"
+
+                             sh "docker push 389035013580.dkr.ecr.us-east-1.amazonaws.com/fashionapp:${params.IMAGETAG}"
 
                         }
                 }
