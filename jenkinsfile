@@ -9,28 +9,12 @@ pipeline{
         CRED_ID = 'ecr:us-east-1:fasionapp_id'
         REPO_NAME = 'fashionapp'
         REPO_URL = "389035013580.dkr.ecr.us-east-1.amazonaws.com"
-        FULL_REPO_URL = 'https://${REPO_URL}/' 
+        FULL_REPO_URL = 'https://${REPO_URL}/'
+        ECS_CLUSTER_NAME = "fashonCluster"
+        ECS_SERVICE_NAME = "fashionapp-svc"
     }
 
     stages{
-
-        // stage("Fetch code"){
-
-        // }
-        // stage("Build & push dockerhub"){
-        //     steps{
-        //         script{
-        //             // This step should not normally be used in your script. Consult the inline help for details.
-        //                 withDockerRegistry(credentialsId: 'dockerhub_id') {
-        //                     sh "docker build -t myapp:${params.IMAGETAG} ."
-        //                     sh "docker tag myapp:${params.IMAGETAG} jesusgeo/myapp:${params.IMAGETAG}"
-        //                     sh "docker push jesusgeo/myapp:${params.IMAGETAG}"
-        //                 }
-        //         }
-                
-        //     }
-           
-        // }
 
         stage("Build & push to ECR"){
 
@@ -47,6 +31,12 @@ pipeline{
 
                         }
                 }
+            }
+        }
+
+        stage("Update ECS"){
+            steps{
+               sh "aws ecs update-service --cluster ${ECS_CLUSTER_NAME} --service  ${ECS_SERVICE_NAME} --force-new-deployment"
             }
         }
 
