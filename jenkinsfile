@@ -4,12 +4,14 @@ pipeline{
             string(name: 'IMAGETAG', defaultValue: '1.0.0') // multiple assignments
 
         }
-
+//
     environment{
         CRED_ID = 'ecr:us-east-1:fasionapp_id'
-        REPO_NAME = 'fashionapp'
-        REPO_URL = "389035013580.dkr.ecr.us-east-1.amazonaws.com"
-        FULL_REPO_URL = 'https://${REPO_URL}/'
+
+        ECR_REPO_NAME = 'fashionapp'
+        ECR_REPO_URL = "389035013580.dkr.ecr.us-east-1.amazonaws.com"
+        ECR_FULL_REPO_URL = 'https://${REPO_URL}/'
+
         ECS_CLUSTER_NAME = "fashonCluster"
         ECS_SERVICE_NAME = "fashionapp-svc"
     }
@@ -24,16 +26,30 @@ pipeline{
                         withDockerRegistry(credentialsId: CRED_ID , url: FULL_REPO_URL ) {
                        
                              sh "docker build -t myapp:${params.IMAGETAG} ."
-                             sh "docker tag myapp:${params.IMAGETAG}  ${REPO_URL}/${REPO_NAME}:${params.IMAGETAG}"
-                             sh "docker tag myapp:${params.IMAGETAG} ${REPO_URL}/${REPO_NAME}:latest"
-                             sh "docker push ${REPO_URL}/${REPO_NAME}:latest"
-                             sh "docker push ${REPO_URL}/${REPO_NAME}:${params.IMAGETAG}"
+
+                             sh "docker tag myapp:${params.IMAGETAG}  ${ECR_REPO_URL}/${ECR_REPO_NAME}:${params.IMAGETAG}"
+
+                             sh "docker tag myapp:${params.IMAGETAG} ${ECR_REPO_URL}/${ECR_REPO_NAME}:latest"
+
+                             sh "docker push ${ECR_REPO_URL}/${ECR_REPO_NAME}:latest"
+
+                             sh "docker push ${ECR_REPO_URL}/${ECR_REPO_NAME}:${params.IMAGETAG}"
 
                         }
                 }
             }
         }
 
+        stage("Install Aws CLI"){
+            steps{
+                sh'''
+
+                    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+                    unzip awscliv2.zip
+                    sudo ./aws/install
+                '''
+            }
+        }
         stage("Update ECS"){
             steps{
                sh "aws ecs update-service --cluster ${ECS_CLUSTER_NAME} --service  ${ECS_SERVICE_NAME} --force-new-deployment"
@@ -43,5 +59,7 @@ pipeline{
     }
     
 }
+
+
 
 
