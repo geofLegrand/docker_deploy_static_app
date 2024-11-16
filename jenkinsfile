@@ -1,65 +1,39 @@
-pipeline{
+ipeline{
     agent any
-        parameters {
-            string(name: 'IMAGETAG', defaultValue: '1.0.0') // multiple assignments
-
+        parameters{
+            string(name: 'MYAPP', defaultValue: '1.0.3')
         }
-//
-    environment{
-        CRED_ID = 'ecr:us-east-1:fasionapp_id'
-
-        ECR_REPO_NAME = 'fashionapp'
-        ECR_REPO_URL = "389035013580.dkr.ecr.us-east-1.amazonaws.com"
-        ECR_FULL_REPO_URL = 'https://${REPO_URL}/'
-
-        ECS_CLUSTER_NAME = "fashonCluster"
-        ECS_SERVICE_NAME = "fashionapp-svc"
-    }
-
+        environment{
+            ECR_REPO_URL='389035013580.dkr.ecr.us-east-1.amazonaws.com' // this variable refer to the link of ECR repository
+            APP_NAME='fashion-app' // this variable use to give the name of my image into my current docker (ec2 instance)
+            ECR_APP_NAME='fashionapp' // this variable use to give the name of my image into ECR
+            CRED_ID='ecr:us-east-1:fasionapp_id' // this variable refer to my AWS credential that i put in jenkins
+            ECS_CLUST_NAME='fashionCluster' // my ecs cluster name
+            ECS_SVC_NAME='fashionapp-svc' // my ecs service name
+        }
+   
     stages{
-
-        stage("Build & push to ECR"){
-
+        stage("Build & Push in ECR Repository"){
             steps{
                 script{
                     // This step should not normally be used in your script. Consult the inline help for details.
-                        withDockerRegistry(credentialsId: CRED_ID , url: FULL_REPO_URL ) {
-                       
-                             sh "docker build -t myapp:${params.IMAGETAG} ."
+                withDockerRegistry(credentialsId: CRED_ID, url: 'https://${ECR_REPO_URL}/') {
+                 sh "docker build -t ${APP_NAME}:${params.MYAPP} ."
+                 sh "docker tag ${APP_NAME}:${params.MYAPP} ${ECR_REPO_URL}/${ECR_APP_NAME}:${params.MYAPP}" 
+                 sh "docker tag ${APP_NAME}:${params.MYAPP} ${ECR_REPO_URL}/${ECR_APP_NAME}:latest"
 
-                             sh "docker tag myapp:${params.IMAGETAG}  ${ECR_REPO_URL}/${ECR_REPO_NAME}:${params.IMAGETAG}"
-
-                             sh "docker tag myapp:${params.IMAGETAG} ${ECR_REPO_URL}/${ECR_REPO_NAME}:latest"
-
-                             sh "docker push ${ECR_REPO_URL}/${ECR_REPO_NAME}:latest"
-
-                             sh "docker push ${ECR_REPO_URL}/${ECR_REPO_NAME}:${params.IMAGETAG}"
-
-                        }
+                 sh "docker push ${ECR_REPO_URL}/${ECR_APP_NAME}:${params.MYAPP}"
+                 sh "docker push ${ECR_REPO_URL}/${ECR_APP_NAME}:latest"
                 }
-            }
+              }
+           }
         }
-
-        stage("Install Aws CLI"){
+        stage("update ECS"){
             steps{
-                sh'''
-
-                    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-                    unzip awscliv2.zip
-                    sudo ./aws/install
-                '''
-            }
-        }
-        stage("Update ECS"){
-            steps{
-               sh "aws ecs update-service --cluster ${ECS_CLUSTER_NAME} --service  ${ECS_SERVICE_NAME} --force-new-deployment"
+                sh"aws ecs update-service --cluster ${ECS_CLUST_NAME} --service ${ECS_SVC_NAME} --force-new-deployment "
             }
         }
 
+       
     }
-    
 }
-
-
-
-

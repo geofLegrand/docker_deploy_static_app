@@ -1,0 +1,46 @@
+     Describe the implamentaion of my CICD pipeline
+     
+1- Configure webhook for GitHub => ok
+2- check GitHub hook trigger for GITScm polling in Jenkins to trigger the jobs => ok
+3- Test my webhook => ok
+
+4- ECR
+  a - create the user => ok
+  b - give the credential to that user (create access key) and save it => ok
+  c - and give the permission AmazonEC2ContainerRegistryFullAccess and AmazonECS_FullAccess to that user => ok
+  
+5- Jenkins
+  a - install AWS credential plugin and  Amazon ECR aws => ok
+  b - create the credential using AWS Credential choosing in Kind field => ok
+  c - use pipeline syntax to help you generate the Jenkins authenticate job 
+  d - copy and paste that syntax in your jenkinsfile
+
+6- deploy the image to the ECR  => ok
+  a- using ECR command that Aws ECR generate.
+	
+  b- copy and paste it into your job
+  c - test to deploy the image
+
+7- ECS => ok
+  a- create the cluster first (clusterName)
+  b- create Task definitions ( dont forget to add the ecs task permission)
+    add permission if you don't have : iam role -> create role -> AWS service -> select Elastic Container   Service -> Elastic Container Service Task -> next (this permission AmazonECSTaskExecutionRolePolicy)
+      
+  c- create the service under the cluster (serviceName)
+ 
+8 - EC2 => ok
+  a- make sure that you have install aws cli in your instance : go to aws documentation to see those commands
+	curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+        unzip awscliv2.zip (may be install unzip in your ec2)
+        sudo ./aws/install
+   
+
+9- Jenkins
+  a- Create a Jenkins job
+  b- and use this command < aws ecs update-service --cluster <clusterName> --service  <serviceName> --force-new-deployment > 
+     to update the ECS when new push happen in the vcs (GitHub)
+
+
+
+
+
