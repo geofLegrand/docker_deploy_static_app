@@ -14,21 +14,37 @@ pipeline{
         }
    
     stages{
-        stage("Build & Push in ECR Repository"){
+        
+        stage("scan files"){
+            steps{
+                sh "trivy fs --format table -o fashion_app.html"
+            }
+        }
+
+        stage("Build image"){
+            sh "docker build -t ${APP_NAME}:${params.MYAPP} ."
+            sh "docker tag ${APP_NAME}:${params.MYAPP} ${ECR_REPO_URL}/${ECR_APP_NAME}:${params.MYAPP}" 
+            sh "docker tag ${APP_NAME}:${params.MYAPP} ${ECR_REPO_URL}/${ECR_APP_NAME}:latest"
+        }
+
+        stage("Scan image build"){
+            steps{
+                sh "trivy image --format table -o docker_image_fashion.html  ${ECR_REPO_URL}/${ECR_APP_NAME}:latest"
+            }
+        }
+
+        stage("Push in ECR Repository"){
             steps{
                 script{
                     // This step should not normally be used in your script. Consult the inline help for details.
                 withDockerRegistry(credentialsId: CRED_ID, url: URL) {
-                 sh "docker build -t ${APP_NAME}:${params.MYAPP} ."
-                 sh "docker tag ${APP_NAME}:${params.MYAPP} ${ECR_REPO_URL}/${ECR_APP_NAME}:${params.MYAPP}" 
-                 sh "docker tag ${APP_NAME}:${params.MYAPP} ${ECR_REPO_URL}/${ECR_APP_NAME}:latest"
-
                  sh "docker push ${ECR_REPO_URL}/${ECR_APP_NAME}:${params.MYAPP}"
                  sh "docker push ${ECR_REPO_URL}/${ECR_APP_NAME}:latest"
                 }
               }
            }
         }
+
         stage("update ECS"){
             steps{
                 sh"aws ecs update-service --cluster ${ECS_CLUST_NAME} --service ${ECS_SVC_NAME} --force-new-deployment "
