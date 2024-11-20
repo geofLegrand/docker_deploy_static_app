@@ -10,7 +10,7 @@ pipeline{
             CRED_ID='ecr:us-east-1:fasionapp_id' // this variable refer to my AWS credential that i put in jenkins
             ECS_CLUST_NAME='fashionCluster' // my ecs cluster name
             ECS_SVC_NAME='fashionapp-svc' // my ecs service name
-            URL='https://${ECR_REPO_URL}/'
+            MY_URL='https://${ECR_REPO_URL}/'
         }
    
     stages{
@@ -41,7 +41,7 @@ pipeline{
             steps{
                 script{
                     // This step should not normally be used in your script. Consult the inline help for details.
-                withDockerRegistry(credentialsId: CRED_ID, url: URL) {
+                withDockerRegistry(credentialsId: CRED_ID, url: MY_URL) {
                  sh "docker push ${ECR_REPO_URL}/${ECR_APP_NAME}:${params.MYAPP}"
                  sh "docker push ${ECR_REPO_URL}/${ECR_APP_NAME}:latest"
                 }
