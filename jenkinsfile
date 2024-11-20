@@ -17,7 +17,7 @@ pipeline{
         
         stage("Scan files"){
             steps{
-                sh "trivy fs --format table -o fashion_app.html ."
+                sh "trivy fs --format table -o fashion_app.txt ."
             }
         }
 
@@ -33,7 +33,7 @@ pipeline{
 
         stage("Scan image build"){
             steps{
-                sh "trivy image --format table -o docker_image_fashion.html  ${ECR_REPO_URL}/${ECR_APP_NAME}:latest"
+                sh "trivy image --format table -o docker_image_fashion.txt  ${ECR_REPO_URL}/${ECR_APP_NAME}:latest"
             }
         }
 
