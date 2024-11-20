@@ -17,7 +17,7 @@ pipeline{
         
         stage("Scan files"){
             steps{
-                sh "trivy fs --format table -o fashion_app.html"
+                sh "trivy fs --format table -o fashion_app.html ."
             }
         }
 
