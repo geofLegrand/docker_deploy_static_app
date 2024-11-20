@@ -15,16 +15,20 @@ pipeline{
    
     stages{
         
-        stage("scan files"){
+        stage("Scan files"){
             steps{
                 sh "trivy fs --format table -o fashion_app.html"
             }
         }
 
         stage("Build image"){
-            sh "docker build -t ${APP_NAME}:${params.MYAPP} ."
-            sh "docker tag ${APP_NAME}:${params.MYAPP} ${ECR_REPO_URL}/${ECR_APP_NAME}:${params.MYAPP}" 
-            sh "docker tag ${APP_NAME}:${params.MYAPP} ${ECR_REPO_URL}/${ECR_APP_NAME}:latest"
+            steps{
+
+          
+                sh "docker build -t ${APP_NAME}:${params.MYAPP} ."
+                sh "docker tag ${APP_NAME}:${params.MYAPP} ${ECR_REPO_URL}/${ECR_APP_NAME}:${params.MYAPP}" 
+                sh "docker tag ${APP_NAME}:${params.MYAPP} ${ECR_REPO_URL}/${ECR_APP_NAME}:latest"
+            }
         }
 
         stage("Scan image build"){
