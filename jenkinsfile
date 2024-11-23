@@ -10,7 +10,9 @@ pipeline{
             CRED_ID='ecr:us-east-1:fasionapp_id' // this variable refer to my AWS credential that i put in jenkins
             ECS_CLUST_NAME='fashionCluster' // my ecs cluster name
             ECS_SVC_NAME='fashionapp-svc' // my ecs service name
-            MY_URL='https://${ECR_REPO_URL}/'
+            MY_URL='https://${ECR_REPO_URL}/' 
+
+            SONAR_SCANNER= tool 'sonar'
         }
    
     stages{
@@ -21,7 +23,15 @@ pipeline{
                 script{
                      withSonarQubeEnv('mySonarQube') {
                     // some block
-                        sh "echo iam sonar"
+                        echo "  ${SONAR_SCANNER}"
+                        
+                        sh '''
+                            ${SONAR_SCANNER}/bin/sonar-scanner \
+                            -Dsonar.projectKey=${APP_NAME} \
+                            -Dsonar.sources= . \
+                            -Dsonar.projectName=${APP_NAME} \
+                            -Dsonar.java.binaries=.
+                        '''
                     }    
                 }
                
