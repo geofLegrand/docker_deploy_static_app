@@ -24,11 +24,11 @@ pipeline{
                      withSonarQubeEnv('mySonarQube') {
                     // some block
                         echo "  ${SONAR_SCANNER}"
-                        
+
                         sh '''
                             ${SONAR_SCANNER}/bin/sonar-scanner \
                             -Dsonar.projectKey=${APP_NAME} \
-                            -Dsonar.sources= . \
+                            -Dsonar.sources=. \
                             -Dsonar.projectName=${APP_NAME} \
                             -Dsonar.java.binaries=.
                         '''
