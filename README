@@ -17,15 +17,13 @@
 
 6- deploy the image to the ECR  => ok
   a- using ECR command that Aws ECR generate.
-	
   b- copy and paste it into your job
   c - test to deploy the image
 
 7- ECS => ok
   a- create the cluster first (clusterName)
   b- create Task definitions ( dont forget to add the ecs task permission)
-    add permission if you don't have : iam role -> create role -> AWS service -> select Elastic Container   Service -> Elastic Container Service Task -> next (this permission AmazonECSTaskExecutionRolePolicy)
-      
+    add permission if you don't have : iam role -> create role -> AWS service -> select Elastic Container   Service -> Elastic Container Service Task -> next (this permission AmazonECSTaskExecutionRolePolicy)  
   c- create the service under the cluster (serviceName)
  
 8 - EC2 => ok
@@ -34,7 +32,6 @@
         unzip awscliv2.zip (may be install unzip in your ec2)
         sudo ./aws/install
    
-
 9- Jenkins
   a- Create a Jenkins job
   b- and use this command < aws ecs update-service --cluster <clusterName> --service  <serviceName> --force-new-deployment > 

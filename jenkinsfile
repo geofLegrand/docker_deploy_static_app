@@ -14,17 +14,29 @@ pipeline{
         }
    
     stages{
+
+        
+        stage("Sonar Scan"){
+            steps{
+                script{
+                     withSonarQubeEnv(credentialsId: 'sonar_cred') {
+                    // some block
+                        sh "echo iam sonar"
+                    }    
+                }
+               
+            }
+        }
         
         stage("Scan files"){
             steps{
-                sh "trivy fs --format table -o fashion_app.txt ."
+                sh "trivy fs --format table -o fashion_app.html ."
             }
         }
 
+
         stage("Build image"){
             steps{
-
-          
                 sh "docker build -t ${APP_NAME}:${params.MYAPP} ."
                 sh "docker tag ${APP_NAME}:${params.MYAPP} ${ECR_REPO_URL}/${ECR_APP_NAME}:${params.MYAPP}" 
                 sh "docker tag ${APP_NAME}:${params.MYAPP} ${ECR_REPO_URL}/${ECR_APP_NAME}:latest"
@@ -33,7 +45,7 @@ pipeline{
 
         stage("Scan image build"){
             steps{
-                sh "trivy image --format table -o docker_image_fashion.txt  ${ECR_REPO_URL}/${ECR_APP_NAME}:latest"
+                sh "trivy image --format table -o docker_image_fashion.html  ${ECR_REPO_URL}/${ECR_APP_NAME}:latest"
             }
         }
 
