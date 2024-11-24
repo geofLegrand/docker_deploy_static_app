@@ -19,7 +19,7 @@ env:
   ECS_SVC_NAME: 'fashionapp-svc' # my ecs service name
   MY_URL: 'https://${ECR_REPO_URL}/' 
 
-  SONAR_SCANNER: tool 'sonar-tool'
+  SONAR_SCANNER: 'sonar-tool'
   SONAR_SEVER: 'mySonar_server'
 
 
