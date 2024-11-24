@@ -1,0 +1,48 @@
+
+name: Deploy my app
+
+on:
+  push: # when i push on main branch
+    branches:
+      - main
+  pull_request: # or when we have pull request
+    branches:
+      - main
+
+###### Define my environment variable #########
+env:
+  ECR_REPO_URL: '389035013580.dkr.ecr.us-east-1.amazonaws.com' # this variable refer to the link of ECR repository
+  APP_NAME: 'fashion-app' # this variable use to give the name of my image into my current docker (ec2 instance)
+  ECR_APP_NAME: 'fashionapp' # this variable use to give the name of my image into ECR
+  CRED_ID: 'ecr:us-east-1:fasionapp_id' # this variable refer to my AWS credential that i put in jenkins
+  ECS_CLUST_NAME: 'fashionCluster' # my ecs cluster name
+  ECS_SVC_NAME: 'fashionapp-svc' # my ecs service name
+  MY_URL: 'https://${ECR_REPO_URL}/' 
+
+  SONAR_SCANNER: tool 'sonar-tool'
+  SONAR_SEVER: 'mySonar_server'
+
+
+##### Start the job ################
+jobs:
+  build:
+    runs-on:  ubuntu-latest
+    steps:
+      - name: download the sources
+        uses: actions/checkout@v3
+      - name: Authanticate
+        uses: sonarsource/sonarqube-scan-action@master
+        
+        env:
+          SONAR_TOKEN: 'squ_2ea30bff73c0ede02b41363da27294b1a0f77ddb'
+          SONAR_HOST_URL: 'http://34.207.118.246:9000/'
+      # - name: Scan with sonar
+      #   run: |
+      #     $SONAR_SCANNER/bin/sonar-scanner \
+      #     -Dsonar.projectKey=${{ env.APP_NAME }} \
+      #     -Dsonar.sources=. \
+      #     -Dsonar.projectName=${{ env.APP_NAME }} \
+      #     -Dsonar.java.binaries=.
+        
+
+   
